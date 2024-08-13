@@ -1,0 +1,75 @@
+name: example-basic
+# This workflow represents a set of basic End-to-End tests
+on:
+  push:
+    branches:
+      - 'master'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+
+  basic-ubuntu-20:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cucumber tests
+          build: npx cypress info
+
+  basic-ubuntu-22:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cucumber tests
+        uses: ./
+        with:
+          working-directory: examples/basic
+          build: npx cucumber info
+
+  basic-on-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cucumber tests
+        uses: ./
+        with:
+          working-directory: examples/basic
+          build: npx cucumber info
+
+  basic-on-mac:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cucumber tests
+        uses: ./
+        with:
+          working-directory: examples/basic
+          build: npx cucumber info
+
+  # skips the binary installation
+  # shows that the job should not fail
+  
+  basic-without-binary-install:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cucumber tests
+        uses: ./
+        with:
+          working-directory: examples/basic
+          # since we do not install Cypress
+          # we should not attempt to run tests
+          runTests: false
+        env:
+          # skip the binary install
+          CUCUMBER_INSTALL_BINARY: 0
